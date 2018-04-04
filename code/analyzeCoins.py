@@ -119,57 +119,55 @@ def plotAllSeries(_series):
 ##############################################
 # Augmented Dickey-Fuller test
 ##############################################
-'''
+
 regressionTypes = ['c', 'ct', 'ctt', 'nc']
 maxLags = [10,20,30,40]
 
 for _reg in regressionTypes:
-    for _lag in maxLags:
-        # test dlog(ether)
-        dfTest = adfuller(coins['dlog'], maxlag = _lag, regression=_reg)
+    # test dlog(ether)
+    dfTest = adfuller(coins['dlog'], autolag = 'AIC', regression=_reg)
 
-        # test dlog(btc)
-        dfTest_btc = adfuller(coins['dlog_btc'], maxlag = _lag, regression=_reg)
+    # test dlog(btc)
+    dfTest_btc = adfuller(coins['dlog_btc'], autolag = 'AIC', regression=_reg)
 
-        # test dlog(xrp)
-        dfTest_xrp = adfuller(coins['dlog_xrp'], maxlag = _lag, regression=_reg)
+    # test dlog(xrp)
+    dfTest_xrp = adfuller(coins['dlog_xrp'], autolag = 'AIC', regression=_reg)
 
-        # test dlog(ltc)
-        dfTest_ltc = adfuller(coins['dlog_ltc'], maxlag = _lag, regression=_reg)
+    # test dlog(ltc)
+    dfTest_ltc = adfuller(coins['dlog_ltc'], autolag = 'AIC', regression=_reg)
 
-        print("\n###################################")
-        print("# using " + _reg + " type regression")
-        print("# and " + str(_lag) + " max lags")
-        print("###################################")
+    print("\n###################################")
+    print("# using " + _reg + " type regression")
+    print("###################################")
 
-        print("\n*************** ETH ***************")
-        print("Test Stat... " + str(dfTest[0]))
-        print("pValue...... " + str(dfTest[1]))
-        print("usedLag..... " + str(dfTest[2]))
-        print("N Obs....... " + str(dfTest[3]))
-        print("Info Crit... " + str(dfTest[5]))
+    print("\n*************** ETH ***************")
+    print("Test Stat... " + str(dfTest[0]))
+    print("pValue...... " + str(dfTest[1]))
+    print("usedLag..... " + str(dfTest[2]))
+    print("N Obs....... " + str(dfTest[3]))
+    print("Info Crit... " + str(dfTest[5]))
 
-        print("\n*************** BTC ***************")
-        print("Test Stat... " + str(dfTest_btc[0]))
-        print("pValue...... " + str(dfTest_btc[1]))
-        print("usedLag..... " + str(dfTest_btc[2]))
-        print("N Obs....... " + str(dfTest_btc[3]))
-        print("Info Crit... " + str(dfTest_btc[5]))
+    print("\n*************** BTC ***************")
+    print("Test Stat... " + str(dfTest_btc[0]))
+    print("pValue...... " + str(dfTest_btc[1]))
+    print("usedLag..... " + str(dfTest_btc[2]))
+    print("N Obs....... " + str(dfTest_btc[3]))
+    print("Info Crit... " + str(dfTest_btc[5]))
 
-        print("\n*************** XRP ***************")
-        print("Test Stat... " + str(dfTest_xrp[0]))
-        print("pValue...... " + str(dfTest_xrp[1]))
-        print("usedLag..... " + str(dfTest_xrp[2]))
-        print("N Obs....... " + str(dfTest_xrp[3]))
-        print("Info Crit... " + str(dfTest_xrp[5]))
+    print("\n*************** XRP ***************")
+    print("Test Stat... " + str(dfTest_xrp[0]))
+    print("pValue...... " + str(dfTest_xrp[1]))
+    print("usedLag..... " + str(dfTest_xrp[2]))
+    print("N Obs....... " + str(dfTest_xrp[3]))
+    print("Info Crit... " + str(dfTest_xrp[5]))
 
-        print("\n*************** LTC ***************")
-        print("Test Stat... " + str(dfTest_ltc[0]))
-        print("pValue...... " + str(dfTest_ltc[1]))
-        print("usedLag..... " + str(dfTest_ltc[2]))
-        print("N Obs....... " + str(dfTest_ltc[3]))
-        print("Info Crit... " + str(dfTest_ltc[5]))
-'''
+    print("\n*************** LTC ***************")
+    print("Test Stat... " + str(dfTest_ltc[0]))
+    print("pValue...... " + str(dfTest_ltc[1]))
+    print("usedLag..... " + str(dfTest_ltc[2]))
+    print("N Obs....... " + str(dfTest_ltc[3]))
+    print("Info Crit... " + str(dfTest_ltc[5]))
+
 ##############################################
 # Granger causality test
 ##############################################
@@ -196,16 +194,15 @@ gc = grangercausalitytests(xrpBtc, maxlag=30, verbose=True)
 ##############################################
 # Plot
 ##############################################
-'''
+
 # Plot series
 plotAllSeries("Close")
 plotAllSeries("dlog")
 
-
+# Plot series, acf, pacf
 tsPlot(coins["Date"], coins["Close"], lags=25, title="Ether")
 tsPlot(coins["Date"], coins["dlog"], lags=25, title="Ether")
 
 # close multipanel plot and display
 pp.close()
 plt.show()
-'''
