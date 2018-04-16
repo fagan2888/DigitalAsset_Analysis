@@ -41,6 +41,7 @@ def getTimeUnit(_ts):
 def getWeightedPriceAverage(_df, _finalTimes):
 
     finalPriceSeries = []
+    finalAmountSeries = []
 
     time_orig = _df['timestamp']
     price_orig = _df['price']
@@ -49,19 +50,18 @@ def getWeightedPriceAverage(_df, _finalTimes):
     indexCounter = 0
     for timeSlot in _finalTimes:
 
-        print(timeSlot)
+        print("\n" + str(timeSlot))
 
         totalAmountToAve = 0
         totalWeightedPrice = 0
 
         while (time_orig.iloc[indexCounter] <= timeSlot):
 
-            if (indexCounter%1000 == 0):
-                print("Loop " + str(indexCounter))
-
             amount = amount_orig.iloc[indexCounter]
+
             if (amount == 0):
                 amount = 0.000000001
+
             totalWeightedPrice += amount*price_orig.iloc[indexCounter]
             totalAmountToAve += amount
             indexCounter += 1
@@ -69,12 +69,12 @@ def getWeightedPriceAverage(_df, _finalTimes):
 
         weightedPrice = totalWeightedPrice/totalAmountToAve
         finalPriceSeries.append(weightedPrice)
+        finalAmountSeries.append(amount)
         print(weightedPrice)
 
     print("Time series observations: " + str(len(_finalTimes)))
     print("Price series observations: " + str(len(finalPriceSeries)))
-    return finalPriceSeries
-
+    return finalPriceSeries, finalAmountSeries
 
 ##############################################
 # Read Data
@@ -158,22 +158,32 @@ timeChunk = max(e[0], b[0], x[0], l[0])
 print("\nThe final time bucket " + str(timeChunk))
 
 # array for my final time buckets
-finalTimeBucket = np.arange(minTime, maxTime, timeChunk)
+finalTimeBucket = np.arange(minTime + timeChunk, maxTime, timeChunk)
 print("Total observataions in finals series " + str(len(finalTimeBucket)))
 
-###
+### calculate new dataset
 
-print(eth.describe())
-print(btc.describe())
-print(xrp.describe())
-print(ltc.describe())
+print("Starting times:")
+print(min(eth['timestamp']))
+print(min(xrp['timestamp']))
+print(min(ltc['timestamp']))
+print(min(btc['timestamp']))
 
-print( min(eth['timestamp']))
-print( min(xrp['timestamp']))
-print( min(ltc['timestamp']))
-print( min(btc['timestamp']))
-
+print("Calculating weighted prices...")
 ethPrices = getWeightedPriceAverage(eth, finalTimeBucket)
 btcPrices = getWeightedPriceAverage(btc, finalTimeBucket)
 ltcPrices = getWeightedPriceAverage(ltc, finalTimeBucket)
 xrpPrices = getWeightedPriceAverage(xrp, finalTimeBucket)
+
+### add and write new dataset
+
+data = {"Time":finalTimeBucket, \
+        "ETH":ethPrices[0], "Volume_Eth":ethPrices[1], \
+        "BTC":btcPrices[0], "Volume_BTC":btcPrices[1], \
+        "LTC":ltcPrices[0], "Volume_LTC":ltcPrices[1], \
+        "XRP":xrpPrices[0], "Volume_XRP":xrpPrices[1]}
+
+coins = pd.DataFrame(data=data)
+
+os.chdir(FOLDER_WRITE)
+coins.to_csv("coinData_hourly.csv")
