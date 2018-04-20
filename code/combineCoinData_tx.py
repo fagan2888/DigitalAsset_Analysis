@@ -39,6 +39,12 @@ def getTimeUnit(_ts):
     return maxTimeJump, minTimeJump
 
 def getWeightedPriceAverage(_df, _finalTimes):
+    # Finds the weighted price average for all transactions
+    # between time stamps given in final time
+    #
+    # Pre... a dataframe with series for "timestamp", "price", and "amount"
+    #        and a series of final time buckets with regular periods
+    # Post.. returns a series of the weighted price and amount transacted in each time jump
 
     finalPriceSeries = []
     finalAmountSeries = []
@@ -93,6 +99,7 @@ print("reading ltc...")
 ltc = pd.read_csv(FOLDER_READ + LTC, \
                   dtype={"ID":int, "timestamp":int, "amount":float, "price":float})
 
+# due to memory issues, read this in iteratively
 print("reading btc...")
 btcIter = pd.read_csv(FOLDER_READ + BTC, iterator=True, chunksize=100000,dtype={"ID":int, "timestamp":int, "amount":float, "price":float})
 btc = pd.concat([chunk[chunk['timestamp'] >= 1502901198] for chunk in btcIter])
@@ -122,11 +129,6 @@ maxLtc = max(ltc['timestamp'])
 maxBtc = max(btc['timestamp'])
 maxTime = min(maxEth,maxXrp,maxLtc,maxBtc)
 
-# Turns out eth is limiting factor
-# But when it was first opened to trade
-# it took a few hours for people to use it
-# So, I'm setting the minimum time based on looking at data
-
 print("Limiting minimum timestamp " + str(minTime))
 print("Limiting maximum timestamp " + str(maxTime))
 
@@ -136,11 +138,7 @@ eth = eth[eth['timestamp'] >= minTime]
 ltc = ltc[ltc['timestamp'] >= minTime]
 xrp = xrp[xrp['timestamp'] >= minTime]
 
-print(eth)
-print(btc)
-print(ltc)
-print(xrp)
-
+# find largest time between transactions for each series
 print("Calculating max and min time jumps for eth")
 e = getTimeUnit(eth['timestamp'])
 
@@ -153,11 +151,11 @@ x = getTimeUnit(xrp['timestamp'])
 print("Calculating max and min time jumps for ltc")
 l = getTimeUnit(ltc['timestamp'])
 
+# find largest time between any transaction in set
 timeChunk = max(e[0], b[0], x[0], l[0])
-
 print("\nThe final time bucket " + str(timeChunk))
 
-# array for my final time buckets
+# array for my final time series
 finalTimeBucket = np.arange(minTime + timeChunk, maxTime, timeChunk)
 print("Total observataions in finals series " + str(len(finalTimeBucket)))
 
@@ -169,13 +167,14 @@ print(min(xrp['timestamp']))
 print(min(ltc['timestamp']))
 print(min(btc['timestamp']))
 
+# find new price series
 print("Calculating weighted prices...")
 ethPrices = getWeightedPriceAverage(eth, finalTimeBucket)
 btcPrices = getWeightedPriceAverage(btc, finalTimeBucket)
 ltcPrices = getWeightedPriceAverage(ltc, finalTimeBucket)
 xrpPrices = getWeightedPriceAverage(xrp, finalTimeBucket)
 
-### add and write new dataset
+### make and write new dataset
 
 data = {"Time":finalTimeBucket, \
         "ETH":ethPrices[0], "Volume_Eth":ethPrices[1], \

@@ -40,10 +40,10 @@ coins = pd.merge(coins, xrp, 'left', on='Date', suffixes=['', '_xrp'])
 
 # check they are all there
 print(coins.dtypes)
-print(coins['Date'])
+
 ##############################################
 # Write Data
 ##############################################
 
-os.chdir(FOLDER_READ)
-coins.to_csv('coinData.csv')
+os.chdir(FOLDER_WRITE)
+coins.to_csv('coinData_daily.csv')
