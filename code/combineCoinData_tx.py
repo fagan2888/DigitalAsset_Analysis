@@ -14,7 +14,7 @@ import pandas as pd
 ##############################################
 # Variables
 ##############################################
-FOLDER_READ = "C:\\Users\\smlee\\Downloads\\TxCoinData\\"
+FOLDER_READ = "C:\\Users\\smlee\\Downloads\\CoinData\\TxLevelCoinData\\"
 FOLDER_WRITE = "C:\\Users\\smlee\\Dropbox\\ECON8812\\project"
 
 ETH = "ETHUSD_transactions.csv"
@@ -133,10 +133,10 @@ print("Limiting minimum timestamp " + str(minTime))
 print("Limiting maximum timestamp " + str(maxTime))
 
 # reset each series to only count observations past that date
-btc = btc[btc['timestamp'] >= minTime]
 eth = eth[eth['timestamp'] >= minTime]
 ltc = ltc[ltc['timestamp'] >= minTime]
 xrp = xrp[xrp['timestamp'] >= minTime]
+btc = btc[btc['timestamp'] >= minTime]
 
 # find largest time between transactions for each series
 print("Calculating max and min time jumps for eth")
@@ -153,7 +153,7 @@ l = getTimeUnit(ltc['timestamp'])
 
 # find largest time between any transaction in set
 timeChunk = max(e[0], b[0], x[0], l[0])
-print("\nThe final time bucket " + str(timeChunk))
+print("\nThe final time jump for each bucket is " + str(timeChunk) + " s")
 
 # array for my final time series
 finalTimeBucket = np.arange(minTime + timeChunk, maxTime, timeChunk)
