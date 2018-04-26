@@ -1,0 +1,6 @@
+report/*.aux
+report/*.tex
+report/*.synctex.gz
+report/*.out
+report/*.txt
+report/*.log
