@@ -25,6 +25,7 @@ BTC = "BTCUSD_transactions.csv"
 XRP = "XRPUSD_transactions.csv"
 LTC = "LTCUSD_transactions.csv"
 
+# set time chunk to 1 hour
 timeChunk = 3600
 
 ##############################################
@@ -51,26 +52,38 @@ def getWeightedPriceAverage(_df, _finalTimes):
     #        and a series of final time buckets with regular periods
     # Post.. returns a series of the weighted price and amount transacted in each time jump
 
+    # placeholders for final series
     finalPriceSeries = []
     finalAmountSeries = []
 
+    # decompose the dataframe
     time_orig = _df['timestamp']
     price_orig = _df['price']
     amount_orig = _df['amount']
 
+    # get time chunk for use later...
     timeChunks = _finalTimes[1] - _finalTimes[0]
 
+    # fill each time slot with a weighted price average
     indexCounter = 0
+    loopCounter = 0
+    print("\nCalculating weighted price average...")
     for timeSlot in _finalTimes:
 
-        print("\n" + str(timeSlot))
+        print("Time: " + str(timeSlot))
 
+        # find proper starting index on tx level series
+        # some start way before the first time slot
+        # loop through until it is within an hour of the first time bucket
         while (time_orig.iloc[indexCounter] < _finalTimes[0] - timeChunks):
             indexCounter += 1
 
+        # reset temp variables for calculating weighted averages
         totalAmountToAve = 0
         totalWeightedPrice = 0
 
+        # calculate weighted average while time is less than the
+        # current bucket to fill
         while (time_orig.iloc[indexCounter] <= timeSlot):
 
             amount = amount_orig.iloc[indexCounter]
@@ -82,11 +95,17 @@ def getWeightedPriceAverage(_df, _finalTimes):
             totalAmountToAve += amount
             indexCounter += 1
 
+        # when you exit while loop, calculate weighted price
+        if (totalAmountToAve > 0):
+            weightedPrice = totalWeightedPrice/totalAmountToAve
+            print("Price: " + str(weightedPrice))
+        else:
+            weightedPrice = None
+            print("Missing observation")
 
-        weightedPrice = totalWeightedPrice/totalAmountToAve
+        # add to series
         finalPriceSeries.append(weightedPrice)
         finalAmountSeries.append(amount)
-        print(weightedPrice)
 
     print("Time series observations: " + str(len(_finalTimes)))
     print("Price series observations: " + str(len(finalPriceSeries)))
@@ -111,7 +130,8 @@ _ltc = pd.read_csv(FOLDER_READ + LTC, \
 
 # due to memory issues, read this in iteratively
 print("reading btc...")
-btcIter = pd.read_csv(FOLDER_READ + BTC, iterator=True, chunksize=100000,dtype={"ID":int, "timestamp":int, "amount":float, "price":float})
+btcIter = pd.read_csv(FOLDER_READ + BTC, \
+                     iterator=True, chunksize=100000,dtype={"ID":int, "timestamp":int, "amount":float, "price":float})
 _btc = pd.concat([chunk[chunk['timestamp'] >= 1502901198] for chunk in btcIter])
 
 ##############################################
@@ -145,25 +165,16 @@ print("\nThe final time jump for each bucket is " + str(timeChunk) + " s")
 
 # array for my final time series
 finalTimeBucket = np.arange(minTime + timeChunk, maxTime, timeChunk)
-print("Total observataions in finals series " + str(len(finalTimeBucket)))
+print("Total observataions in finals series " + str(len(finalTimeBucket)) + "\n")
 
-### calculate new dataset
-
-print("Starting times:")
-print(min(_eth['timestamp']))
-print(min(_xrp['timestamp']))
-print(min(_ltc['timestamp']))
-print(min(_btc['timestamp']))
-
+# calculate new dataset
 # find new price series
-print("Calculating weighted prices...")
 ethPrices = getWeightedPriceAverage(_eth, finalTimeBucket)
 btcPrices = getWeightedPriceAverage(_btc, finalTimeBucket)
 ltcPrices = getWeightedPriceAverage(_ltc, finalTimeBucket)
 xrpPrices = getWeightedPriceAverage(_xrp, finalTimeBucket)
 
-### make and write new dataset
-
+# make and write new dataset
 data = {"Time":finalTimeBucket, \
         "ETH":ethPrices[0], "Volume_Eth":ethPrices[1], \
         "BTC":btcPrices[0], "Volume_BTC":btcPrices[1], \
