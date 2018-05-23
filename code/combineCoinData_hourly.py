@@ -18,7 +18,7 @@ import pandas as pd
 # Variables
 ##############################################
 FOLDER_READ = "C:\\Users\\smlee\\Downloads\\CoinData\\TxLevelCoinData\\"
-FOLDER_WRITE = "C:\\Users\\smlee\\Dropbox\\ECON8812\\project"
+FOLDER_WRITE = "C:\\Users\\smlee\\Dropbox\\Spring2018_Coursework\\ECON8812\\project\\data\\"
 
 ETH = "ETHUSD_transactions.csv"
 BTC = "BTCUSD_transactions.csv"
@@ -184,4 +184,4 @@ data = {"Time":finalTimeBucket, \
 coins = pd.DataFrame(data=data)
 
 os.chdir(FOLDER_WRITE)
-coins.to_csv("coinData_hourly.csv")
+coins.to_csv("coinData_hourly(Aug17-May18).csv")
