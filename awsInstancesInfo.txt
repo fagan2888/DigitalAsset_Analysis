@@ -1,0 +1,17 @@
+
+/* EC2 INSTANCE */
+
+// from directory with keypair
+chmod 400 TwitterAws_key.pem
+
+// ssh into instance
+ssh -i "TwitterAws_key.pem" ubuntu@ec2-52-15-178-42.us-east-2.compute.amazonaws.com
+
+/* RDS INSTANCE */
+
+// connect to mySQLWorkbench
+// endpoint:
+twitterdata.ckmmf3gk0i4d.us-east-2.rds.amazonaws.com
+
+// username:
+Emperor
