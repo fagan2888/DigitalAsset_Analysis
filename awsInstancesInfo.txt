@@ -1,5 +1,6 @@
-
+//////////////////
 /* EC2 INSTANCE */
+//////////////////
 
 // from directory with keypair
 chmod 400 TwitterAws_key.pem
@@ -7,11 +8,17 @@ chmod 400 TwitterAws_key.pem
 // ssh into instance
 ssh -i "TwitterAws_key.pem" ubuntu@ec2-52-15-178-42.us-east-2.compute.amazonaws.com
 
+//////////////////
 /* RDS INSTANCE */
+//////////////////
 
-// connect to mySQLWorkbench
-// endpoint:
-twitterdata.ckmmf3gk0i4d.us-east-2.rds.amazonaws.com
+// connect to mysql from command line
+mysql -h twitterdata.ckmmf3gk0i4d.us-east-2.rds.amazonaws.com -u Emperor -p
 
-// username:
-Emperor
+/////////////////////////////
+/* UPLOAD FILE TO INSTANCE */
+/////////////////////////////
+scp -i "TwitterAws_key.pem" ~/Documents/Research/DigitalAsset_Analysis/code/awsTest.py ubuntu@ec2-52-15-178-42.us-east-2.compute.amazonaws.com:
+
+// upload file to twitter folder
+scp -i "TwitterAws_key.pem" ~/Dropbox/CodeWorkspace/Twitter-Search-API-Python/scrapeTwitter.py ubuntu@ec2-52-15-178-42.us-east-2.compute.amazonaws.com:~/TwitterSearch_API
