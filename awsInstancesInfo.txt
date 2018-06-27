@@ -9,11 +9,11 @@ chmod 400 TwitterAws_key.pem
 ssh -i "TwitterAws_key.pem" ubuntu@ec2-18-216-161-74.us-east-2.compute.amazonaws.com
 
 // ssh into instance 2
-ssh -i "TwitterAws_key.pem" ubuntu@ec2-18-222-0-23.us-east-2.compute.amazonaws.com
+ssh -i "TwitterAws_key.pem" ubuntu@ec2-13-58-243-34.us-east-2.compute.amazonaws.com
 
 // installs
-sudo apt-get dist-upgrade
 sudo apt-get update
+sudo apt-get dist-upgrade
 sudo apt install python3-pip
 sudo apt-get install mysql-server
 pip3 install beautifulsoup4
@@ -39,10 +39,10 @@ mysql -h twitterdata.ckmmf3gk0i4d.us-east-2.rds.amazonaws.com -u Emperor -p
 
 // move file from local to remote
 // (scrapeTwitter.py)
-scp -i "TwitterAws_key.pem" ~/Dropbox/CodeWorkspace/Twitter-Search-API-Python/scrapeTwitter.py ubuntu@ec2-18-222-0-23.us-east-2.compute.amazonaws.com:~/TwitterSearch_API
+scp -i "TwitterAws_key.pem" ~/Dropbox/CodeWorkspace/Twitter-Search-API-Python/scrapeTwitter.py ubuntu@ec2-13-58-57-120.us-east-2.compute.amazonaws.com:~/TwitterSearch_API
 
 // (config.py)
-scp -i "TwitterAws_key.pem" ~/Dropbox/CodeWorkspace/Twitter-Search-API-Python/config.py ubuntu@ec2-18-222-0-23.us-east-2.compute.amazonaws.com:~/TwitterSearch_API
+scp -i "TwitterAws_key.pem" ~/Dropbox/CodeWorkspace/Twitter-Search-API-Python/config.py ubuntu@ec2-13-58-57-120.us-east-2.compute.amazonaws.com:~/TwitterSearch_API
 
 scp -i "TwitterAws_key.pem" ~/Dropbox/CodeWorkspace/Twitter-Search-API-Python/testScrape.py ubuntu@ec2-18-216-161-74.us-east-2.compute.amazonaws.com:~/TwitterSearch_API
 
@@ -55,4 +55,4 @@ scp -i "TwitterAws_key.pem" ubuntu@ec2-13-59-88-63.us-east-2.compute.amazonaws.c
 
 select count(*) from ethereum;
 select max(Date) as date from ethereum;
-select count(Date) from bitcoin where Date > "2018-04-01 00:00:00" and Date < "2018-05-01 00:00:00"
+select count(Date) from ripple where Date > "2018-04-01 00:00:00" and Date < "2018-05-01 00:00:00"
