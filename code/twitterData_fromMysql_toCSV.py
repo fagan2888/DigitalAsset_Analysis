@@ -13,4 +13,6 @@ print("reading...")
 df_aug = pd.read_sql('SELECT * FROM crypto_aug', con = engine)
 df_sept = pd.read_sql('SELECT * FROM crypto_sept', con = engine)
 df = df_aug.merge(df_sept, how='outer')
-print(df)
+
+print("writing to csv...")
+df.to_csv('twitter_crypto.csv')
