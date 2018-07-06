@@ -56,3 +56,4 @@ scp -i "TwitterAws_key.pem" ubuntu@ec2-13-59-88-63.us-east-2.compute.amazonaws.c
 select count(*) from ethereum;
 select max(Date) as date from ethereum;
 select count(Date) from ripple where Date > "2018-04-01 00:00:00" and Date < "2018-05-01 00:00:00"
+select DATE(Date), count(*) from ethereum GROUP BY Date(Date);
