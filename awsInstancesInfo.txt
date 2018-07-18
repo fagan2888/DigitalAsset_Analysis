@@ -38,10 +38,10 @@ mysql -h twitterdata.ckmmf3gk0i4d.us-east-2.rds.amazonaws.com -u Emperor -p
 
 // move file from local to remote
 // (scrapeTwitter.py)
-scp -i "TwitterAws_key.pem" ~/Dropbox/CodeWorkspace/Twitter-Search-API-Python/scrapeTwitter.py ubuntu@ec2-18-188-32-175.us-east-2.compute.amazonaws.com:~/TwitterSearch_API
+scp -i "TwitterAws_key.pem" ~/Dropbox/CodeWorkspace/Twitter-Search-API-Python/scrapeTwitter.py ubuntu@ec2-18-216-52-228.us-east-2.compute.amazonaws.com:~/TwitterSearch_API
 
 // (config.py)
-scp -i "TwitterAws_key.pem" ~/Dropbox/CodeWorkspace/Twitter-Search-API-Python/config.py ubuntu@ec2-18-191-101-89.us-east-2.compute.amazonaws.com:~/TwitterSearch_API
+scp -i "TwitterAws_key.pem" ~/Dropbox/CodeWorkspace/Twitter-Search-API-Python/config.py ubuntu@ec2-18-216-52-228.us-east-2.compute.amazonaws.com:~/TwitterSearch_API
 
 // (twitterData_fromMysql.py)
 scp -i "TwitterAws_key.pem" ~/Documents/Research/DigitalAsset_Analysis/code/twitterData_fromMysql_toCSV.py ubuntu@ec2-18-191-101-89.us-east-2.compute.amazonaws.com:
